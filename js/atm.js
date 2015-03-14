@@ -25,6 +25,7 @@ var bank = {
       return true;
     },
     updateBalance: function(){
+      (this.balance<=0) ? docById('balance1').classList.add('zero') : docById('balance1').classList.remove('zero');
       docById("balance1").innerHTML = '$' + this.balance.toString();
       return true ;
     },
@@ -52,6 +53,7 @@ var bank = {
       return true;
     },
     updateBalance: function(){
+      (this.balance<=0) ? docById('balance2').classList.add('zero') : docById('balance2').classList.remove('zero');
       docById("balance2").innerHTML = '$' + this.balance.toString();
       return true;
     },
