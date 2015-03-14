@@ -1,53 +1,31 @@
-// add event listener to button
+/* All event listener */
+checkingDeposit.addEventListener('click', function() { 
+  var checkingAmount = stripValue('checkingAmount');
+  return bank.checking.deposit(checkingAmount);
+});
 
-checkingDeposit.addEventListener('click', 
-  function() {
-    this.accountType = "checking";
-    this.element = "checkingAmount";
-    return deposit(this.accountType, this.element);
-  }
-);
+checkingWithdraw.addEventListener('click', function() { 
+  var checkingAmount = stripValue('checkingAmount');
+  return bank.checking.withdraw(checkingAmount);
+});
 
-checkingWithdraw.addEventListener('click', 
-  function() {
-    this.accountType = "checking";
-    this.element = "checkingAmount";
-    return withdraw(this.accountType, this.element);
-  }
-);
+checkingTransfer.addEventListener('click', function() { 
+  var checkingAmount = stripValue('checkingAmount');
+  return bank.checking.transfer(checkingAmount);
+});
 
-checkingTransfer.addEventListener('click', 
-  function() {
-    this.accountType = "checking";
-    this.element = "checkingAmount";
-    this.transfer = "savingsAmount";
-    this.accountTypeTransfer = "savings";
-    return transfer(this.accountType, this.element, this.accountTypeTransfer, this.transfer);
-  }
-);
 
-savingsDeposit.addEventListener('click', 
-  function() {
-    this.accountType = "savings";
-    this.element = "savingsAmount";
-    return deposit(this.accountType, this.element);
-  }
-);
+savingsDeposit.addEventListener('click', function() { 
+  var savingsAmount = stripValue('savingsAmount');
+  return bank.savings.deposit(savingsAmount);
+});
 
-savingsWithdraw.addEventListener('click', 
-  function() {
-    this.accountType = "savings";
-    this.element = "savingsAmount";
-    return withdraw(this.accountType, this.element);
-  }
-);
+savingsWithdraw.addEventListener('click', function() { 
+  var savingsAmount = stripValue('savingsAmount');
+  return bank.savings.withdraw(savingsAmount);
+});
 
-savingsTransfer.addEventListener('click', 
-  function() {
-    this.accountType = "savings";
-    this.element = "savingsAmount";
-    this.transfer = "checkingAmount";
-    this.accountTypeTransfer = "checking";
-    return transfer(this.accountType, this.element, this.accountTypeTransfer, this.transfer);
-  }
-);
+savingsWithdraw.addEventListener('click', function() { 
+  var savingsAmount = stripValue('savingsAmount');
+  return bank.savings.transfer(savingsAmount);
+});

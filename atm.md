@@ -22,7 +22,7 @@ Students will build an application using basic javascript functions and DOM mani
 ^* Make sure you are updating the display and manipulating the HTML of the page
 so a user can see the change.
 
-* Add functionality so that a user can withdraw money from one of the bank accounts.
+^* Add functionality so that a user can withdraw money from one of the bank accounts.
 ^* Make sure you are updating the display and manipulating the HTML of the page
 so a user can see the change.
 
