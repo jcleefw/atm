@@ -12,39 +12,66 @@ var bank = {
 }
 console.log(bank);
 
-var getCheckBalanceId = function() {
-  return docById('balance1');
+var getBalanceId = function(elem) {
+  return (elem === "checkingAmount") ? docById('balance1') : docById('balance2');
+}
+var stripValue = function(elem) {
+  return parseFloat(docById(elem).value.replace(/[$,]+/g,""));
+}
+
+var getTotalBankBalance = function () {
+  var totalBalance = 0;
+  //var currentbankInfo = {};
+  for(var key in bank) {
+    var value = bank[key];
+    console.log(value.type + ": " + value.balance);
+    totalBalance += value.balance;
+  }
+  console.log("totalBalance: " + totalBalance);
+  return totalBalance;
 }
 
 // function to deposit, pass in the type of account, and which elem was click
-function deposit(type, elem) {
+var deposit = function (type, elem, amount) {
   // get value from input box and convert it to numbers. Allow floating numbers. 
   // strip of any dollar signs.
-  var checkingAmount = parseFloat(docById(elem).value.replace(/[$,]+/g,""));
+  // param: amount can be optional
+  var amount = (amount) ? parseFloat(amount) : stripValue(elem);
   
   // check input validation
-  if(inputValidation(checkingAmount)) {
-    bank[type].balance += checkingAmount;
-    return setCheckBalance(bank[type].balance, elem)
+  if(inputValidation(amount)) {
+    bank[type].balance += amount;
+    return setCheckBalance(bank[type].balance, elem);
   } else {
     alert('It Needs to be a number');
     return false;
   }
 }
 
-function withdraw(type, elem) {
-  var checkingAmount = parseFloat(docById(elem).value.replace(/[$,]+/g,""));
-
+var withdraw = function (type, elem, amount) {
+  console.log(typeof amount);
+  var amount = (amount) ? parseFloat(amount) : stripValue(elem);
+  console.log(amount);
   // check input validation
-  if(inputValidation(checkingAmount)) {
+  if(inputValidation(amount)) {
 
-    bank.checking.balance -= checkingAmount;
-    if(bank.checking.balance < 0) {
-      alert("You don't have the money to withdraw");
-      return false;
+    
+    if(bank[type].balance <= 0) {
+      console.log("insufficient fund in this account");
+      var totalBankBalance = getTotalBankBalance();
+      console.log("totalBankBalance = " + totalBankBalance);
+      if(totalBankBalance > 0) {
+        console.log("i have money in other account");
+        
+        return false;
+      } else {
+        alert("You don't have the money to withdraw");
+        return false;
+      }
     } else {
-      return setCheckBalance(bank.checking.balance, elem);
-    }
+      bank[type].balance -= amount;
+      return setCheckBalance(bank[type].balance, elem);
+    } 
       
   } else {
     alert('It Needs to be a number');
@@ -52,37 +79,44 @@ function withdraw(type, elem) {
   }
 }
 
-var noMoreMoney = function(elem) {
-  console.log(docById("balance1"));
-  if(elem=== "checkingAmount") {
-    docById("balance1").classList.add("zero");
-    return true;
-  } else if(elem=== "savingsAmount") {
-    docById("balance2").classList.add("zero");
+var transfer = function (type, elem, transerType, transferElem) {
+
+  var amount = stripValue(elem);
+  var transferAmount = stripValue(transferElem)
+
+  if(amount) {
+    deposit(transerType, transferElem, amount);  
+    withdraw(type, elem, amount);
     return true;
   } else {
+    alert('Please enter a value for ' + type + ' transfer amount');
     return false;
   }
+  
+  
+}
+
+var noMoreMoney = function(elem) {
+  var balanceHtml = getBalanceId(elem);
+  balanceHtml.classList.add("zero");
 }
 
 var iHaveMoney = function(elem) {
-  console.log(elem);
-  if(elem=== "checkingAmount") {
-    docById("balance1").classList.remove("zero");
-    return true;
-  } else if(elem==="savingsAmount") {
-    docById("balance2").classList.remove("zero");
-    return true;
-  } else {
-    return false;
-  }
-
+  var balanceHtml = getBalanceId(elem);
+  balanceHtml.classList.remove("zero");
 }
 
 var setCheckBalance = function(newBalance, elem) {
-  
+  // get balance html
+  var balanceHtml = getBalanceId(elem);
+
+  //combine new value with $ symbol
   this.newBalance = '$' + newBalance.toString();
-  document.getElementById('balance1').innerHTML = this.newBalance;
+
+  // assign new balance into html
+  balanceHtml.innerHTML = this.newBalance;
+
+  // based on new balance check whether there is value and change the element color accordingly
   (newBalance > 0) ? iHaveMoney(elem) : noMoreMoney(elem);
   return true;
 }
