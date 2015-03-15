@@ -2,6 +2,24 @@
 checkingButton = ["checkingDeposit", "checkingWithdraw", "checkingTransfer"];
 savingsButton = ["savingDeposit", "savingsWithdraw", "savingTransfer"];
 
+/* global functions*/
+var getTotalBankBalance = function () {
+  var totalBalance = 0;
+  //var currentbankInfo = {};
+  for(var key in bank) {
+    var value = bank[key];
+    if(value.balance) {
+      //console.log(value.type + ": " + value.balance);
+      totalBalance += value.balance;
+    }
+  }
+  //console.log("totalBalance: " + totalBalance);
+  return totalBalance;
+}
+
+var inputValidation = function (input) {
+  return (!isNaN(input)) ?  true :  false;
+}
 //short form for document.getElementById()
 var docById = function( id ) { return document.getElementById( id ); };
 
@@ -16,6 +34,7 @@ var savingsAmount = parseFloat(docById('savingsAmount').value.replace(/[$,]+/g,"
 
 /* objects */
 var bank = {
+  totalBalance: function() { return getTotalBankBalance() },
   checking : {
     type: 'checking', 
     balance: balance1,
@@ -30,14 +49,30 @@ var bank = {
       return true ;
     },
     withdraw: function(amount) {
+      
       var message = "insufficient fund in this account";
-      if (this.balance <= 0) {
-        console.log(message);
-        return false;
+      var totalBalance = bank.totalBalance();
+      
+      if(inputValidation(amount)) {
+        if (this.balance <= 0) {
+          if(totalBalance > 0 && totalBalance >= amount) {
+            bank.savings.transfer(amount);
+            this.withdraw(amount);
+            return this.updateBalance();
+          } else {
+            console.log(message);
+            return false;
+          }
+        } else {
+          this.balance -= amount;
+          return this.updateBalance();
+        }
+
       } else {
-        this.balance -= amount;
-        return this.updateBalance();
+        alert('It Needs to be a number');
+        return false;
       }
+      
     }, 
     transfer: function(amount) {
       var success = this.withdraw(amount);
@@ -58,14 +93,30 @@ var bank = {
       return true;
     },
     withdraw: function(amount) {
+      
       var message = "insufficient fund in this account";
-      if (this.balance <= 0) {
-        console.log(message);
-        return false;
+      var totalBalance = bank.totalBalance();
+      
+      if(inputValidation(amount)) {
+        if (this.balance <= 0) {
+          if(totalBalance > 0 && totalBalance >= amount) {            
+            bank.checking.transfer(amount);
+            this.withdraw(amount);
+            return this.updateBalance();
+          } else {
+            console.log(message);
+            return false;
+          }
+        } else {
+          this.balance -= amount;
+          return this.updateBalance();
+        }
+
       } else {
-        this.balance -= amount;
-        return this.updateBalance();
-      } 
+        alert('It Needs to be a number');
+        return false;
+      }
+      
     }, 
     transfer: function(amount) {
       var success = this.withdraw(amount);
