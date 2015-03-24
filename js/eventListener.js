@@ -1,31 +1,39 @@
+$(document).ready(function () {
+// var checkingAmount = parseFloat(docById('checkingAmount').value.replace(/[$,]+/g,""));
+// var savingsAmount = parseFloat(docById('savingsAmount').value.replace(/[$,]+/g,""));
+  bank.checking.balance = parseFloat($('#balance1').html().trim().replace("$", ""));
+  bank.savings.balance = parseFloat($('#balance2').html().trim().replace("$", ""));
+
 /* All event listener */
-checkingDeposit.addEventListener('click', function() { 
+$('#checkingDeposit').on('click', function() {
   var checkingAmount = stripValue('checkingAmount');
   return bank.checking.deposit(checkingAmount);
 });
 
-checkingWithdraw.addEventListener('click', function() { 
+$('#checkingWithdraw').on('click', function() { 
   var checkingAmount = stripValue('checkingAmount');
   return bank.checking.withdraw(checkingAmount);
 });
 
-checkingTransfer.addEventListener('click', function() { 
+$('#checkingTransfer').on('click', function() { 
   var checkingAmount = stripValue('checkingAmount');
   return bank.checking.transfer(checkingAmount);
 });
 
 
-savingsDeposit.addEventListener('click', function() { 
+$('#savingsDeposit').on('click', function() { 
   var savingsAmount = stripValue('savingsAmount');
   return bank.savings.deposit(savingsAmount);
 });
 
-savingsWithdraw.addEventListener('click', function() { 
+$('#savingsWithdraw').on('click', function() { 
   var savingsAmount = stripValue('savingsAmount');
   return bank.savings.withdraw(savingsAmount);
 });
 
-savingsWithdraw.addEventListener('click', function() { 
+$('#savingsWithdraw').on('click', function() { 
   var savingsAmount = stripValue('savingsAmount');
   return bank.savings.transfer(savingsAmount);
+});
+
 });

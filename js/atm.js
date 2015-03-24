@@ -1,6 +1,4 @@
-/* global variable*/
-checkingButton = ["checkingDeposit", "checkingWithdraw", "checkingTransfer"];
-savingsButton = ["savingDeposit", "savingsWithdraw", "savingTransfer"];
+
 
 /* global functions*/
 var getTotalBankBalance = function () {
@@ -18,34 +16,35 @@ var getTotalBankBalance = function () {
 }
 
 var inputValidation = function (input) {
-  return (!isNaN(input)) ?  true :  false;
+  return (!isNaN(input) && input>0) ?  true :  false;
 }
-//short form for document.getElementById()
-var docById = function( id ) { return document.getElementById( id ); };
 
 var stripValue = function(elem) {
-  return parseFloat(docById(elem).value.replace(/[$,]+/g,""));
+  return parseFloat($('#'+elem).val().replace(/[$,]+/g,""));
 }
 
-var balance1 = parseFloat(docById('balance1').innerHTML.replace(/[$,]+/g,""));
-var balance2 = parseFloat(docById('balance2').innerHTML.replace(/[$,]+/g,""));
-var checkingAmount = parseFloat(docById('checkingAmount').value.replace(/[$,]+/g,""));
-var savingsAmount = parseFloat(docById('savingsAmount').value.replace(/[$,]+/g,""));
+
+
 
 /* objects */
 var bank = {
   totalBalance: function() { return getTotalBankBalance() },
   checking : {
     type: 'checking', 
-    balance: balance1,
+     // balance: parseFloat($('#balance1').html().trim().replace("$", "")),
     deposit: function(amount) { 
-      this.balance += amount;
-      this.updateBalance();
-      return true;
+      if(inputValidation(amount)) {
+        this.balance += amount;
+        this.updateBalance();
+        return true;
+      } else {
+        alert('It Needs to be a number or a positive value');
+        return false;
+      }
     },
     updateBalance: function(){
-      (this.balance<=0) ? docById('balance1').classList.add('zero') : docById('balance1').classList.remove('zero');
-      docById("balance1").innerHTML = '$' + this.balance.toString();
+      (this.balance<=0) ? $('#balance1').addClass('zero') : $('#balance1').removeClass('zero');
+      $('#balance1').text('$' + this.balance);
       return true ;
     },
     withdraw: function(amount) {
@@ -81,11 +80,16 @@ var bank = {
   } ,
   savings : {
     type: 'savings', 
-    balance: balance2,
+    // balance: balance2,
     deposit: function(amount) { 
-      this.balance += amount;
-      this.updateBalance();
-      return true;
+      if(inputValidation(amount)) {
+        this.balance += amount;
+        this.updateBalance();
+        return true;
+      } else {
+        alert('It Needs to be a number');
+        return false;
+      }
     },
     updateBalance: function(){
       (this.balance<=0) ? docById('balance2').classList.add('zero') : docById('balance2').classList.remove('zero');
